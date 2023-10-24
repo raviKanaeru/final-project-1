@@ -1,6 +1,6 @@
 const db = require("../config/db");
 const { hashPassword, comparePassword } = require("../helpers/bcrypt");
-const { generateToken } = require("../helpers/jwt");
+const { generateToken, verifyToken } = require("../helpers/jwt");
 
 class UserController {
   // register
@@ -53,10 +53,12 @@ class UserController {
 
       // generate token
       const token = generateToken({
-        id: data.id,
-        email: data.email,
+        id: data.rows[0].id,
+        email: data.rows[0].email,
       });
-
+      console.log(token, "<< token");
+      const decode = verifyToken(token);
+      console.log(decode, "<< decode");
       res.status(200).json({
         access_token: token,
       });
